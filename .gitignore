@@ -1,4 +1,5 @@
 *.gem
+.DS_STORE
 .bundle
 Gemfile.lock
 pkg/*
