@@ -1,5 +1,3 @@
-require 'yaml'
-
 namespace :green_light do
 
   desc 'Generates jquery.validate translations of model validation rules'

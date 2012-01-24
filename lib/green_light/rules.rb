@@ -4,7 +4,7 @@ module GreenLight
     include Validations::ValidatesLengthOf
     include Validations::ValidatesNumericalityOf
     include Validations::ValidatesPresenceOf
-    #include Validations::ValidatesUniquenessOf
+    include Validations::ValidatesUniquenessOf
 
     def self.generate(models)
       data, rules = {}, {}
@@ -16,8 +16,8 @@ module GreenLight
         end
       end
 
-      data = data.merge({:errorElement => "span"}).to_json
-      data = "TC.GreenLight = #{data.to_json}"
+      data = data.merge({:errorElement => "span"})
+      data = "TC.GreenLight = #{data.to_json.html_safe}"
     end
 
 
