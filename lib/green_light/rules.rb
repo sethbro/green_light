@@ -4,7 +4,7 @@ module GreenLight
     include Validations::ValidatesLengthOf
     include Validations::ValidatesNumericalityOf
     include Validations::ValidatesPresenceOf
-    include Validations::ValidatesUniquenessOf
+    #include Validations::ValidatesUniquenessOf
 
     def self.generate(models)
       data, rules = {}, {}
@@ -16,7 +16,8 @@ module GreenLight
         end
       end
 
-      data.merge({:errorElement => "span"}).to_json
+      data = data.merge({:errorElement => "span"}).to_json
+      data = "TC.GreenLight = #{data.to_json}"
     end
 
 
@@ -28,7 +29,6 @@ module GreenLight
 
       validation_objs.each do |val_obj|
         params[:val_obj] = val_obj
-        # Call each validation method
         validation_method = val_obj.class.name.split('::').last.underscore
         result = send(validation_method, params) if respond_to? validation_method
         data.merge!(result) unless result.nil?
