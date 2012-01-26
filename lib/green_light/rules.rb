@@ -1,40 +1,46 @@
 module GreenLight
   class Rules
-    include Validations::ValidatesFormatOf
-    include Validations::ValidatesLengthOf
-    include Validations::ValidatesNumericalityOf
-    include Validations::ValidatesPresenceOf
-    include Validations::ValidatesUniquenessOf
+    include Translations::JQueryValidate
 
-    def self.generate(models)
-      data, rules = {}, {}
+    def self.generate( models )
+      rules, messages = {}, {}
 
       models.each do |model|
-        model.constantize._validators.each do |field_name, validations|
-          rules["#{model.to_s.underscore.downcase}[#{field_name}]"] = parse_each_validation(model, field_name, validations)
-          data[:rules] = rules
+
+        model.constantize._validators.each do |field_name, validators|
+          rules.merge( validation_rules( model, field_name, validators ) )
+          messages.merge( error_messages( ( model, field_name, validators ) )
         end
       end
 
-      data = data.merge({:errorElement => "span"})
       data = "TC.GreenLight = #{data.to_json.html_safe}"
     end
 
 
     private
 
-    def self.parse_each_validation(model, field_name, validation_objs)
-      data, params = {}, {}
-      params[:model], params[:field_name] = model, field_name
+    def error_messages( model, field_name, validators )
+      @model, @field_name, msg_hash = model, field_name, msg_hash
 
-      validation_objs.each do |val_obj|
-        params[:val_obj] = val_obj
-        validation_method = val_obj.class.name.split('::').last.underscore
-        result = send(validation_method, params) if respond_to? validation_method
-        data.merge!(result) unless result.nil?
+      validators.each do |validator|
+        @validator = validator
+        err = ActiveModel::Errors.new( model.constantize.new )
+        msg_hash.merge( key => err.generate_message( field_name, @validator.kind ) )
+      end
+    end
+
+    def validation_rules( model, field_name, validators )
+      @model, @field_name, msg_hash = model, field_name, msg_hash
+
+      validators.each do |validator|
+        @validator = validator
+        val_method = @validator.class.name.split('::').last.underscore
+
+        result = send( val_method ) if respond_to? val_method
+        rule_hash.merge!( result ) unless result.nil?
       end
 
-      data
+      rule_hash
     end
 
   end
