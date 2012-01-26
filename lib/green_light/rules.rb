@@ -1,3 +1,4 @@
+require 'awesome_print'
 require_relative 'translations/jquery_validate'
 
 module GreenLight
@@ -5,18 +6,17 @@ module GreenLight
     include ::GreenLight::Translations::JQueryValidate
 
     def generate( models=nil )
-      models ||= ::GreenLight::Config.models
       rules, messages = {}, {}
+      models ||= ::GreenLight::Config.models
 
       models.each do |model|
-
         model.constantize._validators.each do |field_name, validators|
-          rules.merge( validation_rules( model, field_name, validators ) )
-          messages.merge( error_messages( model, field_name, validators ) )
+          rules.merge!( validation_rules( model, field_name, validators ) )
+          messages.merge!( error_messages( model, field_name, validators ) )
         end
       end
 
-      rules.merge( messages ).to_json.html_safe
+      { rules: rules, messages: messages }.to_json
     end
 
 
@@ -29,11 +29,10 @@ module GreenLight
       validators.each do |validator|
         @validator = validator
         err = ActiveModel::Errors.new( model.constantize.new )
-        puts '>>>> err = ' << err.generate_message( field_name, @validator.kind )
-        msg_hash.merge( key => err.generate_message( field_name, @validator.kind ) )
+        result = { key => err.generate_message( field_name, error_type_map( @validator.kind )) }
+        msg_hash.merge!( result )
       end
 
-      puts 'msg_hash = ' << msg_hash.inspect
       msg_hash
     end
 
@@ -49,8 +48,22 @@ module GreenLight
         rules_hash.merge!( result ) unless result.nil?
       end
 
-      puts 'rules_hash = ' << rules_hash.inspect
       rules_hash
+    end
+
+    def error_type_map( validator_kind )
+      case validator_kind
+      when :presence
+        :blank
+      when :length
+        :too_short
+      when :format
+        :invalid
+      when :numericality
+        :not_a_number
+      when :uniqueness
+        :taken
+      end
     end
 
   end

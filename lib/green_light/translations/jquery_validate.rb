@@ -19,17 +19,28 @@ module GreenLight
       end
 
       def length_validator
-        length_hash = {}
+        length = {}
         opts = @validator.options
-        length_hash[:minlength] = opts[:minimum] if opts[:minimum]
-        length_hash[:maxlength] = opts[:maximum] if opts[:maximum]
+
+        if opts[:is]
+          length[:minlength] = opts[:is]
+          length[:maxlength] = opts[:is]
+        elsif range = opts[:within] || opts[:in]
+          length[:minlength] = range.begin
+          length[:maxlength] = range.end
+        else
+          length[:minlength] = opts[:minimum] if opts[:minimum]
+          length[:maxlength] = opts[:maximum] if opts[:maximum]
+        end
+
+        length
       end
 
-      def uniqueness_validator
-        params = [ "model=#{@model.to_s}", "field=#{@field_name}" ].join( '&' )
-        { key => {
-          :remote => "#{GreenLight.config.url_uniqueness_validator}?#{params}" } }
-      end
+      #def uniqueness_validator
+      #  params = [ "model=#{@model.to_s}", "field=#{@field_name}" ].join( '&' )
+      #  { key => {
+      #    :remote => "#{GreenLight.config.url_uniqueness_validator}?#{params}" } }
+      #end
 
     end
   end
