@@ -1,8 +1,7 @@
 require 'rubygems'
-require 'awesome_print'
 gem 'minitest'
-require 'active_model'
 require 'minitest/autorun'
+require 'active_model'
 require_relative '../lib/green_light'
 
 describe GreenLight do
