@@ -7,15 +7,16 @@ module GreenLight
       end
 
       def presence_validator
-        { key => { :required => true } }
+        { :required => true }
       end
 
       def format_validator
-        { key => {:regex => "#{@validator.options[:with]}".gsub('?-mix:', '') }}
+        {:regex => "#{@validator.options[:with]}".gsub('?-mix:', '') }
       end
 
+      # TODO: Even/odd/float/integer/greater&lessthan
       def numericality_validator
-        { key => {:regex => "^[0-9]*$" }}
+        {:regex => "^[0-9]*$" }
       end
 
       def length_validator
@@ -38,7 +39,7 @@ module GreenLight
 
       #def uniqueness_validator
       #  params = [ "model=#{@model.to_s}", "field=#{@field_name}" ].join( '&' )
-      #  { key => {
+      #  {
       #    :remote => "#{GreenLight.config.url_uniqueness_validator}?#{params}" } }
       #end
 
