@@ -1,6 +1,0 @@
-require 'rubygems'
-require 'rspec'
-require 'rails'
-require 'active_record'
-require 'supermodel'
-require File.dirname(__FILE__) + '/../lib/green_light'
