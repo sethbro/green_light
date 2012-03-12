@@ -2,7 +2,7 @@ namespace :green_light do
 
   desc 'Generates jquery.validate translations of model validation rules'
   task update_validations: :environment do
-    validation_rules = GreenLight::Rules.new.to_json
+    validation_rules = GreenLight::JSON.combined
 
     dir = GreenLight::Config.output_dir
     Dir.mkdir( dir ) unless File.exists?( dir )

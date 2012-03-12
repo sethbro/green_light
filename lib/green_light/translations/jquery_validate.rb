@@ -3,7 +3,7 @@ module GreenLight
     module JQueryValidate
 
       def key
-        "#{@model.to_s.underscore.downcase}[#{@field_name}]"
+        "#{@model.to_s.underscore.downcase}[#{@field}]"
       end
 
       def presence_validator
