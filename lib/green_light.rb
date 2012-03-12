@@ -1,8 +1,7 @@
 require 'active_model'
-require 'active_support/all'
 
 module GreenLight #:nodoc:
-  require_relative 'green_light/rules'
+  require_relative 'green_light/json'
 
   class Config
     class << self
