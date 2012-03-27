@@ -16,7 +16,7 @@ module GreenLight
 
       # TODO: Even/odd/float/integer/greater&lessthan
       def numericality_validator
-        {:regex => "^[0-9]*$" }
+        { digits: true }
       end
 
       def length_validator
