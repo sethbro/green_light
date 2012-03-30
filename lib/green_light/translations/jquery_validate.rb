@@ -11,7 +11,7 @@ module GreenLight
       end
 
       def format_validator
-        {:regex => "#{@validator.options[:with]}".gsub('?-mix:', '') }
+        {:regex => "#{@validator.options[:with]}".gsub('?i-mx:', '') }
       end
 
       # TODO: Even/odd/float/integer/greater&lessthan
